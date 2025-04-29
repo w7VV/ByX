@@ -283,7 +283,7 @@ local function createGUI()
     local targetPageBtn = Instance.new("TextButton", tabsFrame)
     targetPageBtn.Size = UDim2.new(0.2, 0, 1, 0)
     targetPageBtn.Position = UDim2.new(0, 0, 0, 0)
-    targetPageBtn.Text = " الاستهداف (الاعب الي كتبت اسمه)"
+    targetPageBtn.Text = "الاستهداف (الاعب الي كتبت اسمه)"
     targetPageBtn.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
     targetPageBtn.TextColor3 = Color3.new(1, 1, 1)
     targetPageBtn.Font = Enum.Font.SourceSansBold
@@ -385,8 +385,8 @@ local function createGUI()
     playerOnlyBtn.TextColor3 = Color3.new(1, 1, 1)
     playerOnlyBtn.Font = Enum.Font.SourceSansBold
     playerOnlyBtn.TextSize = 14
-    playerOnlyBtn.TextScaled = true
-    playerOnlyBtn.TextWrapped = true
+    selectBtn.TextScaled = true
+    selectBtn.TextWrapped = true
 
     local withArgsBtn = Instance.new("TextButton", commandsPage)
     withArgsBtn.Size = UDim2.new(0.12, -5, 0, 25)
@@ -457,7 +457,7 @@ local function createGUI()
     local nameBox = Instance.new("TextBox", commandsPage)
     nameBox.Size = UDim2.new(1, -20, 0, 30)
     nameBox.Position = UDim2.new(0, 10, 0, 85)
-    nameBox.PlaceholderText = "اسم اللاعب "
+    nameBox.PlaceholderText = "اسم اللاعب"
     nameBox.Text = player.Name
     nameBox.TextSize = 16
     nameBox.TextColor3 = Color3.new(1, 1, 1)
@@ -501,7 +501,7 @@ local function createGUI()
     textBox.PlaceholderText = "النص (مثل hello، test...)"
     textBox.Text = ""
     textBox.TextSize = 16
-    textBox.TextColor3 = Color3.new(helial, 1, 1)
+    textBox.TextColor3 = Color3.new(1, 1, 1)
     textBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
     textBox.Visible = false
     textBox.TextScaled = true
@@ -1134,7 +1134,7 @@ local function createGUI()
             if message == "" then
                 copyToClipboard("يرجى إدخال النص (الصق الامر الي نسخته هنا) !")
                 spamEnabled = false
-                spamBtn.Text = "ارسال "
+                spamBtn.Text = "تفعيل الارسال"
                 spamBtn.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
                 return
             end
