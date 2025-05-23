@@ -9,7 +9,7 @@ local Players = game:GetService("Players")
 local CoreGui = game:GetService("CoreGui")
 local Highlight = loadstring(game:HttpGet("https://github.com/exxtremestuffs/SimpleSpySource/raw/master/highlight.lua"))()
 
--- GUI setup (unchanged)
+-- GUI setup
 local SimpleSpy2 = Instance.new("ScreenGui")
 local Background = Instance.new("Frame")
 local LeftPanel = Instance.new("Frame")
@@ -38,7 +38,7 @@ local ImageLabel_3 = Instance.new("ImageLabel")
 local ToolTip = Instance.new("Frame")
 local TextLabel = Instance.new("TextLabel")
 
--- Properties (unchanged)
+-- Properties
 SimpleSpy2.Name = "SimpleSpy2"
 SimpleSpy2.ResetOnSpawn = false
 
@@ -336,12 +336,12 @@ local recordReturnValues = false
 
 -- Exclusion list for remotes that might be used by Anti-Cheat
 local excludeRemotes = {
-    "namecallinstance", -- Add any remote names that might be related to Anti-Cheat
+    "namecallinstance",
     "antiCheat",
     "security",
 }
 
--- SimpleSpy functions (unchanged)
+-- SimpleSpy functions
 function SimpleSpy:ArgsToString(method, args)
     assert(typeof(method) == "string", "string expected, got " .. typeof(method))
     assert(typeof(args) == "table", "table expected, got " .. typeof(args))
@@ -490,7 +490,7 @@ function onToggleButtonClick()
     else
         TweenService:Create(Simple, TweenInfo.new(0.5), { TextColor3 = Color3.fromRGB(68, 206, 91) }):Play()
     end
-    toggleSpyMethod()
+    toggleSpy()
 end
 
 function connectResize()
@@ -1444,3 +1444,101 @@ end
 function getScriptFromSrc(src)
     local realPath
     local runningTest
+    if src then
+        if getfenv()[src] then
+            realPath = src
+        else
+            for i, v in pairs(getloadedmodules()) do
+                if rawequal(getfenv(v), src) then
+                    realPath = i
+                    break
+                end
+            end
+        end
+        if realPath then
+            runningTest = getfenv()[realPath]
+        end
+    end
+    return runningTest or getfenv()
+end
+
+function toggleSpy()
+    toggle = not toggle
+    if toggle then
+        warn("Spy enabled. Be cautious as this may still be detected by Anti-Cheat systems.")
+        -- Use hookfunction with caution
+        local newFireServer = function(self, ...)
+            if not blocklist[self] then
+                newRemote("event", self.Name, {...}, self, nil, false, getScriptFromSrc(getfenv(2)), recordReturnValues and nil)
+            end
+            return originalEvent(self, ...)
+        end
+        local newInvokeServer = function(self, ...)
+            if not blocklist[self] then
+                local ret = {originalFunction(self, ...)}
+                newRemote("function", self.Name, {...}, self, nil, false, getScriptFromSrc(getfenv(2)), recordReturnValues and ret)
+                return unpack(ret)
+            end
+            return originalFunction(self, ...)
+        end
+        originalEvent = hookfunction(remoteEvent.FireServer, newFireServer)
+        originalFunction = hookfunction(remoteFunction.InvokeServer, newInvokeServer)
+    else
+        warn("Spy disabled.")
+        hookfunction(remoteEvent.FireServer, originalEvent)
+        hookfunction(remoteFunction.InvokeServer, originalFunction)
+    end
+end
+
+function schedule(f)
+    table.insert(scheduled, f)
+end
+
+function scheduleWait()
+    if not schedulerconnect then
+        schedulerconnect = RunService.Heartbeat:Connect(function()
+            for i, f in pairs(scheduled) do
+                if type(f) == "function" then
+                    local s, e = pcall(f)
+                    if not s then
+                        warn("Error in scheduled task: " .. e)
+                    end
+                    table.remove(scheduled, i)
+                end
+            end
+        end)
+    end
+end
+
+-- Event connections
+Simple.MouseEnter:Connect(onToggleButtonHover)
+Simple.MouseLeave:Connect(onToggleButtonUnhover)
+Simple.MouseButton1Click:Connect(onToggleButtonClick)
+CloseButton.MouseEnter:Connect(onXButtonHover)
+CloseButton.MouseLeave:Connect(onXButtonUnhover)
+CloseButton.MouseButton1Click:Connect(function()
+    mainClosing = true
+    closed = true
+    toggleMinimize()
+    mainClosing = false
+end)
+MaximizeButton.MouseButton1Click:Connect(toggleMaximize)
+MinimizeButton.MouseButton1Click:Connect(toggleSideTray)
+TopBar.MouseButton1Down:Connect(onBarInput)
+Background.MouseMoved:Connect(mouseMoved)
+UserInputService.InputBegan:Connect(backgroundUserInput)
+connectResize()
+
+-- Initialize
+_G.SimpleSpyExecuted = true
+_G.SimpleSpyShutdown = function()
+    _G.SimpleSpyExecuted = false
+    for _, v in pairs(connections) do
+        v:Disconnect()
+    end
+    connections = {}
+    SimpleSpy2:Destroy()
+end
+
+-- Start the spy
+toggleSpy()
