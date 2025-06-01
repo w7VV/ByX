@@ -1302,3 +1302,4 @@ local function setupGUI()
                     end
                 end
                 table.insert(combinedCommands
+                        
