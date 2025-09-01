@@ -21,8 +21,8 @@ local Window = Rayfield:CreateWindow({
     KeySettings = {
         Title = "6RB Utility Key",
         Subtitle = "Enter the key to unlock the script",
-        Note = "Key: 0",
-        Key = "BYXVALLYPRISON2025_V2",
+        Note = "Key: 1",
+        Key = "0",
         SaveKey = false,
         WrongKeyMessage = "Incorrect key! Please try again.",
         CorrectKeyMessage = "Script unlocked successfully!"
@@ -747,5 +747,6 @@ StaminaTab:CreateButton({
         end
     end
 })
+
 
 print("✅ Script loaded successfully!")
