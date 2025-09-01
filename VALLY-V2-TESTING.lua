@@ -21,8 +21,8 @@ local Window = Rayfield:CreateWindow({
     KeySettings = {
         Title = "6RB Utility Key",
         Subtitle = "Enter the key to unlock the script",
-        Note = "Key: 1",
-        Key = "0",
+        Note = "Key: BYXVALLYPRISON2025_V2",
+        Key = "BYXVALLYPRISON2025_V2",
         SaveKey = false,
         WrongKeyMessage = "Incorrect key! Please try again.",
         CorrectKeyMessage = "Script unlocked successfully!"
@@ -641,56 +641,6 @@ local RunService = game:GetService("RunService")
 local LocalPlayer = game.Players.LocalPlayer
 local infiniteStaminaEnabled = false
 
--- Button to detect Stamina location (basic search)
-StaminaTab:CreateButton({
-    Name = "Detect Stamina Location",
-    Callback = function()
-        local player = game.Players.LocalPlayer
-        if not player.Character or not player.Character:FindFirstChild("Humanoid") then
-            Rayfield:Notify({
-                Title = "Error",
-                Content = "Cannot find your character or Humanoid!",
-                Duration = 3,
-                Image = 4483362458
-            })
-            return
-        end
-
-        local serverVariables = player:FindFirstChild("ServerVariables")
-        if serverVariables and serverVariables:FindFirstChild("Sprint") then
-            local sprint = serverVariables.Sprint
-            local stamina = sprint:FindFirstChild("Stamina")
-            local maxStamina = sprint:FindFirstChild("MaxStamina")
-            if stamina and maxStamina then
-                print("Stamina found: " .. stamina:GetFullName() .. " (Value: " .. tostring(stamina.Value) .. ")")
-                print("MaxStamina found: " .. maxStamina:GetFullName() .. " (Value: " .. tostring(maxStamina.Value) .. ")")
-                Rayfield:Notify({
-                    Title = "Success",
-                    Content = "Stamina location detected. Check console for details.",
-                    Duration = 5,
-                    Image = 4483362458
-                })
-            else
-                print("Stamina or MaxStamina not found under ServerVariables.Sprint for " .. player.Name)
-                Rayfield:Notify({
-                    Title = "Warning",
-                    Content = "Stamina not found under ServerVariables.Sprint. Check console.",
-                    Duration = 5,
-                    Image = 4483362458
-                })
-            end
-        else
-            print("No ServerVariables or Sprint found for " .. player.Name)
-            Rayfield:Notify({
-                Title = "Warning",
-                Content = "No ServerVariables or Sprint detected. Check console.",
-                Duration = 5,
-                Image = 4483362458
-            })
-        end
-    end
-})
-
 -- Button to toggle Infinite Stamina
 StaminaTab:CreateButton({
     Name = "Toggle Infinite Stamina",
@@ -729,7 +679,7 @@ StaminaTab:CreateButton({
                 print("Stamina or MaxStamina not found to toggle infinite stamina.")
                 Rayfield:Notify({
                     Title = "Error",
-                    Content = "Stamina or MaxStamina not found. Use 'Detect Stamina Location' first.",
+                    Content = "Stamina or MaxStamina not found. Check your character setup.",
                     Duration = 5,
                     Image = 4483362458
                 })
@@ -739,7 +689,7 @@ StaminaTab:CreateButton({
             print("No ServerVariables or Sprint found to toggle infinite stamina.")
             Rayfield:Notify({
                 Title = "Error",
-                Content = "No ServerVariables or Sprint detected. Use 'Detect Stamina Location' first.",
+                Content = "No ServerVariables or Sprint detected. Check your character setup.",
                 Duration = 5,
                 Image = 4483362458
             })
@@ -747,6 +697,5 @@ StaminaTab:CreateButton({
         end
     end
 })
-
 
 print("✅ Script loaded successfully!")
