@@ -2,7 +2,7 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 -- Random theme selection
-local themes = {"Default", "Ocean", "AmberGlow", "Light", "Amethyst", "Green", "Bloom", "DarkBlue", "Serenity"}
+local themes = {"Default", "Ocean", "AmberGlow", "Amethyst", "Green", "Bloom", "DarkBlue", "Serenity"}
 local randomIndex = math.random(1, #themes)
 local randomTheme = themes[randomIndex]
 
@@ -22,7 +22,7 @@ local Window = Rayfield:CreateWindow({
         Title = "6RB Utility Key",
         Subtitle = "Enter the key to unlock the script",
         Note = "Key: BYXVALLYPRISON2025_V2",
-        Key = "BYXVALLYPRISON2025_V2",
+        Key = "0",
         SaveKey = false,
         WrongKeyMessage = "Incorrect key! Please try again.",
         CorrectKeyMessage = "Script unlocked successfully!"
@@ -707,3 +707,4 @@ StaminaTab:CreateButton({
 })
 
 print("✅ Script loaded successfully!")
+
