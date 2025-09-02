@@ -2,7 +2,7 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 -- Random theme selection
-local themes = {"Ocean", "Amethyst", "Bloom", "DarkBlue",}
+local themes = {"Ocean", "Amethyst", "DarkBlue",}
 local randomIndex = math.random(1, #themes)
 local randomTheme = themes[randomIndex]
 
