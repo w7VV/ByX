@@ -21,8 +21,8 @@ local Window = Rayfield:CreateWindow({
     KeySettings = {
         Title = "6RB Utility Key",
         Subtitle = "Enter the key to unlock the script",
-        Note = "Key: 4",
-        Key = "0",
+        Note = "Key: BYXVALLYPRISON2025_V2",
+        Key = "BYXVALLYPRISON2025_V2",
         SaveKey = false,
         WrongKeyMessage = "Incorrect key! Please try again.",
         CorrectKeyMessage = "Script unlocked successfully!"
@@ -537,6 +537,14 @@ TeleportTab:CreateButton({
     end
 })
 
+-- Adding back the Keycard button
+TeleportTab:CreateButton({
+    Name = "Keycard (💳)",
+    Callback = function()
+        game.Players.LocalPlayer.Character:PivotTo(CFrame.new(165.63, 23.10, -192.25)) -- Location linked to "الروت لوكرز الفباي"
+    end
+})
+
 -- // ITEMS SECTION
 local ItemsTab = Window:CreateTab("Items", 4483362458)
 
@@ -699,4 +707,3 @@ StaminaTab:CreateButton({
 })
 
 print("✅ Script loaded successfully!")
-
