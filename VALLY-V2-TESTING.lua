@@ -2,15 +2,15 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 -- Random theme selection
-local themes = {"Default", "Ocean", "AmberGlow", "Amethyst", "Green", "Bloom", "DarkBlue", "Serenity"}
+local themes = {"Ocean", "Amethyst", "Bloom", "DarkBlue",}
 local randomIndex = math.random(1, #themes)
 local randomTheme = themes[randomIndex]
 
 -- Create the Window with KeySystem enabled
 local Window = Rayfield:CreateWindow({
-    Name = "6RB Utility Script",
-    LoadingTitle = "Utility Hub",
-    LoadingSubtitle = "by 6RB",
+    Name = "Valley Prison ByX v2!",
+    LoadingTitle = ".",
+    LoadingSubtitle = "ByX",
     ConfigurationSaving = {
         Enabled = false
     },
@@ -19,10 +19,10 @@ local Window = Rayfield:CreateWindow({
     },
     KeySystem = true,
     KeySettings = {
-        Title = "6RB Utility Key",
+        Title = "Valley Prison ByX V2",
         Subtitle = "Enter the key to unlock the script",
-        Note = "Key: BYXVALLYPRISON2025_V2",
-        Key = "0",
+        Note = ".",
+        Key = "BYXVALLYPRISON_BEST2025_V2",
         SaveKey = false,
         WrongKeyMessage = "Incorrect key! Please try again.",
         CorrectKeyMessage = "Script unlocked successfully!"
@@ -42,14 +42,14 @@ end
 local InfoTab = Window:CreateTab("Info", 4483362458)
 
 InfoTab:CreateButton({
-    Name = "Copy Discord Link",
+    Name = "Copy yt Link",
     Callback = function()
-        local link = "https://discord.gg/6RBHub"
+        local link = "https://www.youtube.com/@6rb-l5r"
         if setclipboard then
             setclipboard(link)
             Rayfield:Notify({
                 Title = "Link Copied!",
-                Content = "The Discord link has been copied to your clipboard.",
+                Content = "The link has been copied to your clipboard.",
                 Duration = 3,
                 Image = 4483362458
             })
@@ -510,15 +510,15 @@ local fovSlider = FOVTab:CreateSlider({
 local TeleportTab = Window:CreateTab("Teleports", 4483362458)
 
 local locations = {
-    ["ورشه"] = CFrame.new(172.34, 23.10, -143.87),
-    ["المراقبه"] = CFrame.new(224.47, 23.10, -167.90),
-    ["القارد co"] = CFrame.new(137.60, 23.10, -169.93),
-    ["الروت لوكرز الفباي"] = CFrame.new(165.63, 23.10, -192.25),
-    ["الدخله"] = CFrame.new(76.96, -7.02, -19.21),
-    ["الماكس"] = CFrame.new(101.84, -8.82, -141.41),
-    ["الماطور"] = CFrame.new(100.95, -8.82, -57.59),
-    ["برا"] = CFrame.new(350.22, 5.40, -171.09),
-    ["المنجم"] = CFrame.new(749.02, -0.97, -470.45)
+    ["MAINTENANCE"] = CFrame.new(172.34, 23.10, -143.87),
+    ["SECURITY"] = CFrame.new(224.47, 23.10, -167.90),
+    ["OC LOCKERS"] = CFrame.new(137.60, 23.10, -169.93),
+    ["RIOT LOCKERS"] = CFrame.new(165.63, 23.10, -192.25),
+    ["VENT"] = CFrame.new(76.96, -7.02, -19.21),
+    ["Maximum"] = CFrame.new(101.84, -8.82, -141.41),
+    ["Generator"] = CFrame.new(100.95, -8.82, -57.59),
+    ["OUTSIDE"] = CFrame.new(350.22, 5.40, -171.09),
+    ["Escapee Base"] = CFrame.new(749.02, -0.97, -470.45)
 }
 
 for name, cf in pairs(locations) do
@@ -537,11 +537,11 @@ TeleportTab:CreateButton({
     end
 })
 
--- Adding back the Keycard button
+-- Adding back the Keycard button with new coordinates
 TeleportTab:CreateButton({
     Name = "Keycard (💳)",
     Callback = function()
-        game.Players.LocalPlayer.Character:PivotTo(CFrame.new(165.63, 23.10, -192.25)) -- Location linked to "الروت لوكرز الفباي"
+        game.Players.LocalPlayer.Character:PivotTo(CFrame.new(-13.36, 22.13, -27.47))
     end
 })
 
@@ -549,7 +549,7 @@ TeleportTab:CreateButton({
 local ItemsTab = Window:CreateTab("Items", 4483362458)
 
 ItemsTab:CreateButton({
-    Name = "Auto Get & Equip Keycard",
+    Name = "Get FAKE Keycard (Players can see it)",
     Callback = function()
         local player = game.Players.LocalPlayer
         if not player.Character or not player.Character:FindFirstChild("HumanoidRootPart") then
@@ -618,7 +618,7 @@ ItemsTab:CreateButton({
                 else
                     Rayfield:Notify({
                         Title = "Warning",
-                        Content = "Keycard is non-functional. Try teleporting to interact.",
+                        Content = "Keycard added to Backpack, but equipping failed. Check your character.",
                         Duration = 5,
                         Image = 4483362458
                     })
@@ -630,7 +630,7 @@ ItemsTab:CreateButton({
             else
                 Rayfield:Notify({
                     Title = "Error",
-                    Content = "Try again later or teleport to a keycard location.",
+                    Content = "Try again .",
                     Duration = 5,
                     Image = 4483362458
                 })
@@ -651,7 +651,7 @@ local infiniteStaminaEnabled = false
 
 -- Button to toggle Infinite Stamina
 StaminaTab:CreateButton({
-    Name = "Toggle Infinite Stamina",
+    Name = "Infinite Stamina",
     Callback = function()
         infiniteStaminaEnabled = not infiniteStaminaEnabled
         local player = game.Players.LocalPlayer
@@ -694,10 +694,10 @@ StaminaTab:CreateButton({
                 infiniteStaminaEnabled = false
             end
         else
-            print("No ServerVariables or Sprint found to toggle infinite stamina.")
+            print(".")
             Rayfield:Notify({
                 Title = "Error",
-                Content = "No ServerVariables or Sprint detected. Check your character setup.",
+                Content = "Try again .",
                 Duration = 5,
                 Image = 4483362458
             })
@@ -707,4 +707,3 @@ StaminaTab:CreateButton({
 })
 
 print("✅ Script loaded successfully!")
-
