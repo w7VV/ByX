@@ -22,7 +22,7 @@ local Window = Rayfield:CreateWindow({
         Title = "Valley Prison ByX V2",
         Subtitle = "Enter the key to unlock the script",
         Note = ".",
-        Key = "BYXVALLYPRISON_BEST2025_V2",
+        Key = "BYXVALLYPRISON_BEST2025ioiup_V2",
         SaveKey = false,
         WrongKeyMessage = "Incorrect key! Please try again.",
         CorrectKeyMessage = "Script unlocked successfully!"
@@ -262,7 +262,7 @@ local function RefreshESP()
         if player ~= Players.LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Character:FindFirstChild("Humanoid") then
             task.spawn(function()
                 CreateESP(player)
-            end
+            end)
         end
     end
     Rayfield:Notify({
@@ -400,21 +400,17 @@ local refreshButton = ESPTab:CreateButton({
 local AimbotTab = Window:CreateTab("Aimbot", 4483362458)
 
 local AimbotEnabled = false
-local SilentAim = false
 local FOVRadius = 150
 local Smoothness = 0.15
 local StickToTarget = false
 local IgnoreWalls = false
 local TeamCheck = false
 local ShowFOVCircle = true
-local PredictionEnabled = false
-local BulletSpeed = 1000
 local CurrentTarget = nil
 local TargetPart = "Head"
 local FOVCircle = nil
 local Camera = workspace.CurrentCamera
 local LocalPlayer = Players.LocalPlayer
-local Mouse = LocalPlayer:GetMouse()
 
 local function CreateFOVCircle()
     if FOVCircle then
@@ -455,20 +451,7 @@ end
 
 local function IsValidTarget(player)
     if player == LocalPlayer then return false end
-    if TeamCheck and LocalPlayer.Team and player.Team then
-        local localPlayerIsPrisoner = table.find(prisonerTeams, LocalPlayer.Team.Name)
-        local targetIsPrisoner = table.find(prisonerTeams, player.Team.Name)
-        -- If both players are in prisoner teams (Minimum, Medium, or Maximum Security), treat them as the same team
-        if localPlayerIsPrisoner and targetIsPrisoner then
-            return false
-        end
-        -- Otherwise, check if they are on different teams
-        if not localPlayerIsPrisoner or not targetIsPrisoner then
-            if LocalPlayer.Team == player.Team then
-                return false
-            end
-        end
-    end
+    if TeamCheck and LocalPlayer.Team and player.Team and player.Team == LocalPlayer.Team then return false end
     if not player.Character or not player.Character:FindFirstChild(TargetPart) or not player.Character:FindFirstChild("Humanoid") then return false end
     return IsVisible(player)
 end
@@ -508,42 +491,6 @@ local function IsInFOV(target)
     return false
 end
 
-local function GetPredictedPosition(targetPart)
-    if not PredictionEnabled then return targetPart.Position end
-    local velocity = targetPart.Velocity
-    local distance = (Camera.CFrame.Position - targetPart.Position).Magnitude
-    local timeToHit = distance / BulletSpeed
-    return targetPart.Position + (velocity * timeToHit)
-end
-
--- Silent Aim Hook
-local oldIndex = nil
-local silentAimConnection = nil
-
-local function EnableSilentAim()
-    if silentAimConnection then return end
-    oldIndex = getmetatable(game).__index
-    getmetatable(game).__index = function(self, index)
-        if AimbotEnabled and SilentAim and CurrentTarget and self == Mouse then
-            if index == "Hit" then
-                local predictedPos = GetPredictedPosition(CurrentTarget.Character[TargetPart])
-                return CFrame.new(predictedPos)
-            elseif index == "Target" then
-                return CurrentTarget.Character[TargetPart]
-            end
-        end
-        return oldIndex(self, index)
-    end
-    silentAimConnection = true
-end
-
-local function DisableSilentAim()
-    if oldIndex then
-        getmetatable(game).__index = oldIndex
-    end
-    silentAimConnection = nil
-end
-
 local aimbotToggle = AimbotTab:CreateToggle({
     Name = "Enable Aimbot",
     CurrentValue = false,
@@ -561,10 +508,10 @@ local aimbotToggle = AimbotTab:CreateToggle({
                     else
                         CurrentTarget = GetClosestPlayerInFOV()
                     end
-                    if not SilentAim and CurrentTarget and CurrentTarget.Character and CurrentTarget.Character:FindFirstChild(TargetPart) then
-                        local predictedPos = GetPredictedPosition(CurrentTarget.Character[TargetPart])
+                    if CurrentTarget and CurrentTarget.Character and CurrentTarget.Character:FindFirstChild(TargetPart) then
+                        local targetPos = CurrentTarget.Character[TargetPart].Position
                         local currentCFrame = Camera.CFrame
-                        local targetCFrame = CFrame.new(currentCFrame.Position, predictedPos)
+                        local targetCFrame = CFrame.new(currentCFrame.Position, targetPos)
                         Camera.CFrame = currentCFrame:Lerp(targetCFrame, Smoothness)
                     end
                 else
@@ -576,53 +523,7 @@ local aimbotToggle = AimbotTab:CreateToggle({
                 FOVCircle:Remove()
                 FOVCircle = nil
             end
-            DisableSilentAim()
         end
-    end
-})
-
-local silentAimToggle = AimbotTab:CreateToggle({
-    Name = "Silent Aim",
-    CurrentValue = false,
-    Flag = "SILENT_AIM",
-    Callback = function(Value)
-        SilentAim = Value
-        if SilentAim and AimbotEnabled then
-            EnableSilentAim()
-        else
-            DisableSilentAim()
-        end
-    end
-})
-
-local predictionToggle = AimbotTab:CreateToggle({
-    Name = "Prediction",
-    CurrentValue = false,
-    Flag = "PREDICTION",
-    Callback = function(Value)
-        PredictionEnabled = Value
-    end
-})
-
-local bulletSpeedSlider = AimbotTab:CreateSlider({
-    Name = "Bullet Speed",
-    Range = {500, 5000},
-    Increment = 100,
-    CurrentValue = 1000,
-    Flag = "BULLET_SPEED",
-    Callback = function(Value)
-        BulletSpeed = Value
-    end
-})
-
-local targetPartDropdown = AimbotTab:CreateDropdown({
-    Name = "Target Part",
-    Options = {"Head", "HumanoidRootPart", "UpperTorso", "LowerTorso"},
-    CurrentOption = {"Head"},
-    MultipleOptions = false,
-    Flag = "TARGET_PART",
-    Callback = function(Option)
-        TargetPart = Option[1]
     end
 })
 
@@ -639,7 +540,7 @@ local radiusSlider = AimbotTab:CreateSlider({
 })
 
 local smoothnessSlider = AimbotTab:CreateSlider({
-    Name = "Smoothness (Visible Aim)",
+    Name = "Smoothness",
     Range = {0.05, 0.5},
     Increment = 0.01,
     CurrentValue = 0.15,
