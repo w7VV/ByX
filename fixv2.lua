@@ -6,9 +6,9 @@ local themes = {"Ocean", "Amethyst", "DarkBlue"}
 local randomIndex = math.random(1, #themes)
 local randomTheme = themes[randomIndex]
 
--- Create the Window with KeySystem enabled
+-- Create the Window WITHOUT KeySystem for easy testing
 local Window = Rayfield:CreateWindow({
-    Name = "Valley Prison ByX v2!",
+    Name = "Valley Prison ByX v2! (Full Test Mode)",
     LoadingTitle = ".",
     LoadingSubtitle = "ByX",
     ConfigurationSaving = {
@@ -17,26 +17,16 @@ local Window = Rayfield:CreateWindow({
     Discord = {
         Enabled = false
     },
-    KeySystem = true,
-    KeySettings = {
-        Title = "Valley Prison ByX V2",
-        Subtitle = "Enter the key to unlock the script",
-        Note = ".",
-        Key = "BYXVALLYPRISON_BEST2025ioiup_V2",
-        SaveKey = false,
-        WrongKeyMessage = "Incorrect key! Please try again.",
-        CorrectKeyMessage = "Script unlocked successfully!"
-    },
+    KeySystem = false,  -- Disabled for testing
     Theme = randomTheme
 })
 
--- Verify KeySystem
 if not Window then
-    warn("KeySystem failed to initialize. Please enter the key: BYXVALLYPRISON2025_V2")
+    warn("Failed to create Window! Check HttpGet.")
     return
-else
-    print("KeySystem validated successfully!")
 end
+
+print("✅ Full Script loaded! Testing ESP and Aimbot...")
 
 -- // INFO TAB
 local InfoTab = Window:CreateTab("Info", 4483362458)
@@ -64,7 +54,7 @@ InfoTab:CreateButton({
     end
 })
 
--- // ESP SECTION
+-- // ESP SECTION (Full version)
 local ESPTab = Window:CreateTab("ESP", 4483362458)
 
 local ESPEnabled = false
@@ -100,129 +90,129 @@ end
 function CreateESP(player)
     if player == Players.LocalPlayer then return end
     if not player.Character or not player.Character:FindFirstChild("HumanoidRootPart") or not player.Character:FindFirstChild("Humanoid") then return end
-    if not ESPObjects[player] then
-        local espHolder = {}
-        
-        local highlight = Instance.new("Highlight")
-        highlight.Parent = player.Character
-        highlight.Adornee = player.Character
-        highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
-        highlight.FillTransparency = 0.3
-        highlight.OutlineTransparency = 1
-        if player.Team and player.Team.TeamColor then
-            highlight.FillColor = player.Team.TeamColor.Color
-        else
-            highlight.FillColor = Color3.fromRGB(255, 255, 255)
-        end
-        espHolder.Highlight = highlight
-
-        local billboard = Instance.new("BillboardGui")
-        billboard.Name = "ESP_Billboard"
-        billboard.Parent = player.Character
-        billboard.Adornee = player.Character:FindFirstChild("Head")
-        billboard.Size = UDim2.new(0, 200, 0, 100)
-        billboard.StudsOffset = Vector3.new(0, 2, 0)
-        billboard.AlwaysOnTop = true
-        billboard.Enabled = ESPEnabled
-
-        local healthFrame = Instance.new("Frame")
-        healthFrame.Name = "HealthBar"
-        healthFrame.Parent = billboard
-        healthFrame.Size = UDim2.new(1, 0, 0, 8)
-        healthFrame.Position = UDim2.new(0, 0, 0, 0)
-        healthFrame.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
-        healthFrame.BackgroundTransparency = 0.2
-        healthFrame.BorderSizePixel = 1
-        healthFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
-        healthFrame.Visible = ShowHealth and ESPEnabled
-
-        local healthBg = Instance.new("Frame")
-        healthBg.Name = "HealthBarBg"
-        healthBg.Parent = healthFrame
-        healthBg.Size = UDim2.new(1, 0, 1, 0)
-        healthBg.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-        healthBg.BackgroundTransparency = 0.7
-        healthBg.BorderSizePixel = 0
-        healthBg.ZIndex = healthFrame.ZIndex - 1
-
-        local healthText = Instance.new("TextLabel")
-        healthText.Name = "HealthText"
-        healthText.Parent = billboard
-        healthText.Size = UDim2.new(1, 0, 0, 15)
-        healthText.Position = UDim2.new(0, 0, 0, 10)
-        healthText.BackgroundTransparency = 1
-        healthText.TextColor3 = Color3.fromRGB(255, 255, 255) -- Fixed white color for health text
-        healthText.TextSize = 12
-        healthText.Font = Enum.Font.SourceSansBold
-        healthText.TextStrokeTransparency = 0
-        healthText.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
-        healthText.Text = "HP: N/A"
-        healthText.Visible = ShowHealth and ESPEnabled
-
-        local inventoryText = Instance.new("TextLabel")
-        inventoryText.Name = "InventoryText"
-        inventoryText.Parent = billboard
-        inventoryText.Size = UDim2.new(1, 0, 0, 15)
-        inventoryText.Position = UDim2.new(0, 0, 0, 25)
-        inventoryText.BackgroundTransparency = 1
-        inventoryText.TextColor3 = player.Team and player.Team.TeamColor and player.Team.TeamColor.Color or Color3.fromRGB(255, 255, 255)
-        inventoryText.TextSize = 12
-        inventoryText.Font = Enum.Font.SourceSansBold
-        inventoryText.TextStrokeTransparency = 0
-        inventoryText.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
-        inventoryText.Text = "Inventory: N/A"
-        inventoryText.Visible = ShowInventory and ESPEnabled and player.Team and table.find(prisonerTeams, player.Team.Name)
-
-        local humanoid = player.Character:FindFirstChild("Humanoid")
-        if humanoid then
-            local function updateHealth()
-                if not player.Character or not player.Character:FindFirstChild("Humanoid") or not healthFrame.Visible then
-                    healthText.Text = "HP: N/A"
-                    healthFrame.Size = UDim2.new(1, 0, 0, 8)
-                    return
-                end
-                local currentHumanoid = player.Character:FindFirstChild("Humanoid")
-                if currentHumanoid then
-                    local healthPercent = currentHumanoid.Health / currentHumanoid.MaxHealth
-                    healthFrame.Size = UDim2.new(healthPercent, 0, 0, 8)
-                    healthFrame.BackgroundColor3 = Color3.fromRGB(255 * (1 - healthPercent), 150 * healthPercent, 0)
-                    healthText.Text = "HP: " .. math.floor(currentHumanoid.Health) .. "/" .. math.floor(currentHumanoid.MaxHealth)
-                else
-                    healthText.Text = "HP: N/A"
-                    healthFrame.Size = UDim2.new(1, 0, 0, 8)
-                end
-            end
-            updateHealth()
-            humanoid:GetPropertyChangedSignal("Health"):Connect(updateHealth)
-            humanoid:GetPropertyChangedSignal("MaxHealth"):Connect(updateHealth)
-        end
-
-        if player.Team and table.find(prisonerTeams, player.Team.Name) then
-            updateInventory(player, { InventoryText = inventoryText })
-            player.Backpack.ChildAdded:Connect(function()
-                updateInventory(player, { InventoryText = inventoryText })
-            end)
-            player.Backpack.ChildRemoved:Connect(function()
-                updateInventory(player, { InventoryText = inventoryText })
-            end)
-            player.Character.ChildAdded:Connect(function(child)
-                if child:IsA("Tool") then
-                    updateInventory(player, { InventoryText = inventoryText })
-                end
-            end)
-            player.Character.ChildRemoved:Connect(function(child)
-                if child:IsA("Tool") then
-                    updateInventory(player, { InventoryText = inventoryText })
-                end
-            end)
-        end
-
-        espHolder.Billboard = billboard
-        espHolder.HealthFrame = healthFrame
-        espHolder.HealthText = healthText
-        espHolder.InventoryText = inventoryText
-        ESPObjects[player] = espHolder
+    if ESPObjects[player] then return end  -- Prevent duplicates
+    local espHolder = {}
+    
+    local highlight = Instance.new("Highlight")
+    highlight.Parent = player.Character
+    highlight.Adornee = player.Character
+    highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+    highlight.FillTransparency = 0.3
+    highlight.OutlineTransparency = 1
+    if player.Team and player.Team.TeamColor then
+        highlight.FillColor = player.Team.TeamColor.Color
+    else
+        highlight.FillColor = Color3.fromRGB(255, 255, 255)
     end
+    espHolder.Highlight = highlight
+
+    local billboard = Instance.new("BillboardGui")
+    billboard.Name = "ESP_Billboard"
+    billboard.Parent = player.Character
+    billboard.Adornee = player.Character:FindFirstChild("Head")
+    billboard.Size = UDim2.new(0, 200, 0, 100)
+    billboard.StudsOffset = Vector3.new(0, 2, 0)
+    billboard.AlwaysOnTop = true
+    billboard.Enabled = ESPEnabled
+
+    local healthFrame = Instance.new("Frame")
+    healthFrame.Name = "HealthBar"
+    healthFrame.Parent = billboard
+    healthFrame.Size = UDim2.new(1, 0, 0, 8)
+    healthFrame.Position = UDim2.new(0, 0, 0, 0)
+    healthFrame.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
+    healthFrame.BackgroundTransparency = 0.2
+    healthFrame.BorderSizePixel = 1
+    healthFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    healthFrame.Visible = ShowHealth and ESPEnabled
+
+    local healthBg = Instance.new("Frame")
+    healthBg.Name = "HealthBarBg"
+    healthBg.Parent = healthFrame
+    healthBg.Size = UDim2.new(1, 0, 1, 0)
+    healthBg.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+    healthBg.BackgroundTransparency = 0.7
+    healthBg.BorderSizePixel = 0
+    healthBg.ZIndex = healthFrame.ZIndex - 1
+
+    local healthText = Instance.new("TextLabel")
+    healthText.Name = "HealthText"
+    healthText.Parent = billboard
+    healthText.Size = UDim2.new(1, 0, 0, 15)
+    healthText.Position = UDim2.new(0, 0, 0, 10)
+    healthText.BackgroundTransparency = 1
+    healthText.TextColor3 = Color3.fromRGB(255, 255, 255)
+    healthText.TextSize = 12
+    healthText.Font = Enum.Font.SourceSansBold
+    healthText.TextStrokeTransparency = 0
+    healthText.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+    healthText.Text = "HP: N/A"
+    healthText.Visible = ShowHealth and ESPEnabled
+
+    local inventoryText = Instance.new("TextLabel")
+    inventoryText.Name = "InventoryText"
+    inventoryText.Parent = billboard
+    inventoryText.Size = UDim2.new(1, 0, 0, 15)
+    inventoryText.Position = UDim2.new(0, 0, 0, 25)
+    inventoryText.BackgroundTransparency = 1
+    inventoryText.TextColor3 = player.Team and player.Team.TeamColor and player.Team.TeamColor.Color or Color3.fromRGB(255, 255, 255)
+    inventoryText.TextSize = 12
+    inventoryText.Font = Enum.Font.SourceSansBold
+    inventoryText.TextStrokeTransparency = 0
+    inventoryText.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+    inventoryText.Text = "Inventory: N/A"
+    inventoryText.Visible = ShowInventory and ESPEnabled and player.Team and table.find(prisonerTeams, player.Team.Name)
+
+    local humanoid = player.Character:FindFirstChild("Humanoid")
+    if humanoid then
+        local function updateHealth()
+            if not player.Character or not player.Character:FindFirstChild("Humanoid") or not healthFrame.Visible then
+                healthText.Text = "HP: N/A"
+                healthFrame.Size = UDim2.new(1, 0, 0, 8)
+                return
+            end
+            local currentHumanoid = player.Character:FindFirstChild("Humanoid")
+            if currentHumanoid then
+                local healthPercent = currentHumanoid.Health / currentHumanoid.MaxHealth
+                healthFrame.Size = UDim2.new(healthPercent, 0, 0, 8)
+                healthFrame.BackgroundColor3 = Color3.fromRGB(255 * (1 - healthPercent
+                                healthFrame.BackgroundColor3 = Color3.fromRGB(255 * (1 - healthPercent), 150 * healthPercent, 0)
+                healthText.Text = "HP: " .. math.floor(currentHumanoid.Health) .. "/" .. math.floor(currentHumanoid.MaxHealth)
+            else
+                healthText.Text = "HP: N/A"
+                healthFrame.Size = UDim2.new(1, 0, 0, 8)
+            end
+        end
+        updateHealth()
+        humanoid:GetPropertyChangedSignal("Health"):Connect(updateHealth)
+        humanoid:GetPropertyChangedSignal("MaxHealth"):Connect(updateHealth)
+    end
+
+    if player.Team and table.find(prisonerTeams, player.Team.Name) then
+        updateInventory(player, espHolder)
+        player.Backpack.ChildAdded:Connect(function()
+            updateInventory(player, espHolder)
+        end)
+        player.Backpack.ChildRemoved:Connect(function()
+            updateInventory(player, espHolder)
+        end)
+        player.Character.ChildAdded:Connect(function(child)
+            if child:IsA("Tool") then
+                updateInventory(player, espHolder)
+            end
+        end)
+        player.Character.ChildRemoved:Connect(function(child)
+            if child:IsA("Tool") then
+                updateInventory(player, espHolder)
+            end
+        end)
+    end
+
+    espHolder.Billboard = billboard
+    espHolder.HealthFrame = healthFrame
+    espHolder.HealthText = healthText
+    espHolder.InventoryText = inventoryText
+    ESPObjects[player] = espHolder
 end
 
 function RemoveESP(player)
@@ -247,17 +237,11 @@ local function RefreshESP()
         })
         return
     end
-    -- Clear all existing ESP objects
     for _, espHolder in pairs(ESPObjects) do
-        if espHolder.Highlight then
-            espHolder.Highlight:Destroy()
-        end
-        if espHolder.Billboard then
-            espHolder.Billboard:Destroy()
-        end
+        if espHolder.Highlight then espHolder.Highlight:Destroy() end
+        if espHolder.Billboard then espHolder.Billboard:Destroy() end
     end
     ESPObjects = {}
-    -- Reapply ESP to all players
     for _, player in pairs(Players:GetPlayers()) do
         if player ~= Players.LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Character:FindFirstChild("Humanoid") then
             task.spawn(function()
@@ -308,10 +292,8 @@ end)
 RunService.Heartbeat:Connect(function()
     if ESPEnabled then
         for _, player in pairs(Players:GetPlayers()) do
-            if player ~= Players.LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Character:FindFirstChild("Humanoid") then
-                task.spawn(function()
-                    CreateESP(player)
-                end)
+            if player ~= Players.LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Character:FindFirstChild("Humanoid") and not ESPObjects[player] then
+                CreateESP(player)
             end
         end
     end
@@ -332,13 +314,9 @@ local espToggle = ESPTab:CreateToggle({
                 end
             end
         else
-            for _, espHolder in pairs(ESPObjects) do
-                if espHolder.Highlight then
-                    espHolder.Highlight:Destroy()
-                end
-                if espHolder.Billboard then
-                    espHolder.Billboard:Destroy()
-                end
+            for player, espHolder in pairs(ESPObjects) do
+                if espHolder.Highlight then espHolder.Highlight:Destroy() end
+                if espHolder.Billboard then espHolder.Billboard:Destroy() end
             end
             ESPObjects = {}
         end
@@ -351,16 +329,16 @@ local healthToggle = ESPTab:CreateToggle({
     Flag = "SHOW_HEALTH",
     Callback = function(Value)
         ShowHealth = Value
-        for _, player in pairs(Players:GetPlayers()) do
-            if ESPObjects[player] and ESPObjects[player].Billboard then
-                ESPObjects[player].Billboard.HealthBar.Visible = ShowHealth and ESPEnabled
-                ESPObjects[player].Billboard.HealthText.Visible = ShowHealth and ESPEnabled
-                if ESPObjects[player].Billboard.HealthText.Visible then
+        for player, espHolder in pairs(ESPObjects) do
+            if espHolder.Billboard then
+                espHolder.Billboard.HealthBar.Visible = ShowHealth and ESPEnabled
+                espHolder.Billboard.HealthText.Visible = ShowHealth and ESPEnabled
+                if espHolder.Billboard.HealthText.Visible then
                     local humanoid = player.Character and player.Character:FindFirstChild("Humanoid")
                     if humanoid then
-                        ESPObjects[player].Billboard.HealthText.Text = "HP: " .. math.floor(humanoid.Health) .. "/" .. math.floor(humanoid.MaxHealth)
+                        espHolder.Billboard.HealthText.Text = "HP: " .. math.floor(humanoid.Health) .. "/" .. math.floor(humanoid.MaxHealth)
                     else
-                        ESPObjects[player].Billboard.HealthText.Text = "HP: N/A"
+                        espHolder.Billboard.HealthText.Text = "HP: N/A"
                     end
                 end
             end
@@ -374,15 +352,15 @@ local inventoryToggle = ESPTab:CreateToggle({
     Flag = "SHOW_INVENTORY",
     Callback = function(Value)
         ShowInventory = Value
-        for _, player in pairs(Players:GetPlayers()) do
-            if ESPObjects[player] and ESPObjects[player].Billboard then
+        for player, espHolder in pairs(ESPObjects) do
+            if espHolder.Billboard then
                 if player.Team and table.find(prisonerTeams, player.Team.Name) then
-                    ESPObjects[player].Billboard.InventoryText.Visible = ShowInventory and ESPEnabled
-                    if ESPObjects[player].Billboard.InventoryText.Visible then
-                        updateInventory(player, ESPObjects[player])
+                    espHolder.Billboard.InventoryText.Visible = ShowInventory and ESPEnabled
+                    if espHolder.Billboard.InventoryText.Visible then
+                        updateInventory(player, espHolder)
                     end
                 else
-                    ESPObjects[player].Billboard.InventoryText.Visible = false
+                    espHolder.Billboard.InventoryText.Visible = false
                 end
             end
         end
@@ -396,21 +374,25 @@ local refreshButton = ESPTab:CreateButton({
     end
 })
 
--- // AIMBOT SECTION
+-- // AIMBOT SECTION (Full improved version)
 local AimbotTab = Window:CreateTab("Aimbot", 4483362458)
 
 local AimbotEnabled = false
+local SilentAim = false
 local FOVRadius = 150
 local Smoothness = 0.15
 local StickToTarget = false
 local IgnoreWalls = false
 local TeamCheck = false
 local ShowFOVCircle = true
+local PredictionEnabled = false
+local BulletSpeed = 1000
 local CurrentTarget = nil
 local TargetPart = "Head"
 local FOVCircle = nil
 local Camera = workspace.CurrentCamera
 local LocalPlayer = Players.LocalPlayer
+local Mouse = LocalPlayer:GetMouse()
 
 local function CreateFOVCircle()
     if FOVCircle then
@@ -425,7 +407,6 @@ local function CreateFOVCircle()
     FOVCircle.Thickness = 2
     FOVCircle.Filled = false
     FOVCircle.Visible = AimbotEnabled and ShowFOVCircle
-    print("FOV Circle created with fixed red color")
 end
 
 local function UpdateFOVCircle()
@@ -436,7 +417,6 @@ local function UpdateFOVCircle()
     FOVCircle.Position = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
     FOVCircle.Radius = FOVRadius
     FOVCircle.Visible = AimbotEnabled and ShowFOVCircle
-    print("FOV Circle updated")
 end
 
 local function IsVisible(target)
@@ -451,7 +431,16 @@ end
 
 local function IsValidTarget(player)
     if player == LocalPlayer then return false end
-    if TeamCheck and LocalPlayer.Team and player.Team and player.Team == LocalPlayer.Team then return false end
+    if TeamCheck and LocalPlayer.Team and player.Team then
+        local localPlayerIsPrisoner = table.find(prisonerTeams, LocalPlayer.Team.Name)
+        local targetIsPrisoner = table.find(prisonerTeams, player.Team.Name)
+        if localPlayerIsPrisoner and targetIsPrisoner then
+            return false
+        end
+        if LocalPlayer.Team == player.Team then
+            return false
+        end
+    end
     if not player.Character or not player.Character:FindFirstChild(TargetPart) or not player.Character:FindFirstChild("Humanoid") then return false end
     return IsVisible(player)
 end
@@ -491,6 +480,38 @@ local function IsInFOV(target)
     return false
 end
 
+local function GetPredictedPosition(targetPart)
+    if not PredictionEnabled then return targetPart.Position end
+    local velocity = targetPart.Velocity
+    local distance = (Camera.CFrame.Position - targetPart.Position).Magnitude
+    local timeToHit = distance / BulletSpeed
+    return targetPart.Position + (velocity * timeToHit)
+end
+
+-- Silent Aim Hook
+local oldIndex = nil
+
+local function EnableSilentAim()
+    oldIndex = getmetatable(game).__index
+    getmetatable(game).__index = function(self, index)
+        if AimbotEnabled and SilentAim and CurrentTarget and self == Mouse then
+            if index == "Hit" then
+                local predictedPos = GetPredictedPosition(CurrentTarget.Character[TargetPart])
+                return CFrame.new(predictedPos)
+            elseif index == "Target" then
+                return CurrentTarget.Character[TargetPart]
+            end
+        end
+        return oldIndex(self, index)
+    end
+end
+
+local function DisableSilentAim()
+    if oldIndex then
+        getmetatable(game).__index = oldIndex
+    end
+end
+
 local aimbotToggle = AimbotTab:CreateToggle({
     Name = "Enable Aimbot",
     CurrentValue = false,
@@ -508,22 +529,69 @@ local aimbotToggle = AimbotTab:CreateToggle({
                     else
                         CurrentTarget = GetClosestPlayerInFOV()
                     end
-                    if CurrentTarget and CurrentTarget.Character and CurrentTarget.Character:FindFirstChild(TargetPart) then
-                        local targetPos = CurrentTarget.Character[TargetPart].Position
+                    if not SilentAim and CurrentTarget and CurrentTarget.Character and CurrentTarget.Character:FindFirstChild(TargetPart) then
+                        local predictedPos = GetPredictedPosition(CurrentTarget.Character[TargetPart])
                         local currentCFrame = Camera.CFrame
-                        local targetCFrame = CFrame.new(currentCFrame.Position, targetPos)
+                        local targetCFrame = CFrame.new(currentCFrame.Position, predictedPos)
                         Camera.CFrame = currentCFrame:Lerp(targetCFrame, Smoothness)
                     end
                 else
                     connection:Disconnect()
                 end
             end)
+            if SilentAim then EnableSilentAim() end
         else
             if FOVCircle then
                 FOVCircle:Remove()
                 FOVCircle = nil
             end
+            DisableSilentAim()
         end
+    end
+})
+
+local silentAimToggle = AimbotTab:CreateToggle({
+    Name = "Silent Aim",
+    CurrentValue = false,
+    Flag = "SILENT_AIM",
+    Callback = function(Value)
+        SilentAim = Value
+        if SilentAim and AimbotEnabled then
+            EnableSilentAim()
+        else
+            DisableSilentAim()
+        end
+    end
+})
+
+local predictionToggle = AimbotTab:CreateToggle({
+    Name = "Prediction",
+    CurrentValue = false,
+    Flag = "PREDICTION",
+    Callback = function(Value)
+        PredictionEnabled = Value
+    end
+})
+
+local bulletSpeedSlider = AimbotTab:CreateSlider({
+    Name = "Bullet Speed",
+    Range = {500, 5000},
+    Increment = 100,
+    CurrentValue = 1000,
+    Flag = "BULLET_SPEED",
+    Callback = function(Value)
+        BulletSpeed = Value
+    end
+})
+
+local targetPartDropdown = AimbotTab:CreateDropdown({
+    Name = "Target Part",
+    Options = {"Head", "HumanoidRootPart", "UpperTorso", "LowerTorso"},
+    CurrentOption = {"Head"},
+    MultipleOptions = false,
+    Flag = "TARGET_PART",
+    Callback = function(Option)
+        TargetPart = Option[1]
     end
 })
 
@@ -540,7 +608,7 @@ local radiusSlider = AimbotTab:CreateSlider({
 })
 
 local smoothnessSlider = AimbotTab:CreateSlider({
-    Name = "Smoothness",
+    Name = "Smoothness (Visible Aim)",
     Range = {0.05, 0.5},
     Increment = 0.01,
     CurrentValue = 0.15,
@@ -597,7 +665,6 @@ local FOVTab = Window:CreateTab("FOV", 4483362458)
 local FOVEnabled = false
 local DefaultFOV = 70
 local CustomFOV = 90
-local Camera = workspace.CurrentCamera
 
 local function UpdateFOV()
     if FOVEnabled then
@@ -614,7 +681,6 @@ local fovToggle = FOVTab:CreateToggle({
     Callback = function(Value)
         FOVEnabled = Value
         UpdateFOV()
-        print(FOVEnabled and "Custom FOV enabled!" or "Custom FOV disabled!")
     end
 })
 
@@ -629,7 +695,6 @@ local fovSlider = FOVTab:CreateSlider({
         if FOVEnabled then
             Camera.FieldOfView = CustomFOV
         end
-        print("FOV set to: " .. CustomFOV)
     end
 })
 
@@ -831,4 +896,4 @@ StaminaTab:CreateButton({
     end
 })
 
-print("✅ Script loaded successfully!")
+print("✅ Full Script loaded successfully! All features ready.")
