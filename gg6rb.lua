@@ -2,15 +2,15 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 -- Random theme selection
-local themes = {"Ocean", "Amethyst", "DarkBlue"}
+local themes = {"Default", "Ocean", "AmberGlow", "Light", "Amethyst", "Green", "Bloom", "DarkBlue", "Serenity"}
 local randomIndex = math.random(1, #themes)
 local randomTheme = themes[randomIndex]
 
 -- Create the Window with KeySystem enabled
 local Window = Rayfield:CreateWindow({
-    Name = "Valley Prison ByX v2!",
-    LoadingTitle = ".",
-    LoadingSubtitle = "ByX",
+    Name = "6RB Utility Script",
+    LoadingTitle = "Utility Hub",
+    LoadingSubtitle = "by 6RB",
     ConfigurationSaving = {
         Enabled = false
     },
@@ -19,10 +19,10 @@ local Window = Rayfield:CreateWindow({
     },
     KeySystem = true,
     KeySettings = {
-        Title = "Valley Prison ByX V2",
+        Title = "6RB Utility Key",
         Subtitle = "Enter the key to unlock the script",
-        Note = ".",
-        Key = "BYXVALLYPRISON_BEST2025ioiup_V2",
+        Note = "Key: BYXVALLYPRISON2025_V2",
+        Key = "BYXVALLYPRISON2025_V2",
         SaveKey = false,
         WrongKeyMessage = "Incorrect key! Please try again.",
         CorrectKeyMessage = "Script unlocked successfully!"
@@ -42,14 +42,14 @@ end
 local InfoTab = Window:CreateTab("Info", 4483362458)
 
 InfoTab:CreateButton({
-    Name = "Copy yt Link",
+    Name = "Copy Discord Link",
     Callback = function()
-        local link = "https://www.youtube.com/@6rb-l5r"
+        local link = "https://discord.gg/6RBHub"
         if setclipboard then
             setclipboard(link)
             Rayfield:Notify({
                 Title = "Link Copied!",
-                Content = "The link has been copied to your clipboard.",
+                Content = "The Discord link has been copied to your clipboard.",
                 Duration = 3,
                 Image = 4483362458
             })
@@ -69,33 +69,9 @@ local ESPTab = Window:CreateTab("ESP", 4483362458)
 
 local ESPEnabled = false
 local ShowHealth = false
-local ShowInventory = false
-local prisonerTeams = {"Minimum Security", "Medium Security", "Maximum Security"}
 local ESPObjects = {}
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
-
-local function updateInventory(player, espHolder)
-    if not player or not espHolder or not player.Backpack or not player.Character then
-        espHolder.InventoryText.Text = "Inventory: N/A"
-        return
-    end
-    local inv = {}
-    for _, tool in pairs(player.Backpack:GetChildren()) do
-        if tool:IsA("Tool") then
-            table.insert(inv, tool.Name)
-        end
-    end
-    local equipped = player.Character:FindFirstChildOfClass("Tool")
-    if equipped then
-        table.insert(inv, equipped.Name .. " (equipped)")
-    end
-    if #inv == 0 then
-        espHolder.InventoryText.Text = "Inventory: Empty"
-    else
-        espHolder.InventoryText.Text = "Inventory: " .. table.concat(inv, ", ")
-    end
-end
 
 function CreateESP(player)
     if player == Players.LocalPlayer then return end
@@ -120,7 +96,7 @@ function CreateESP(player)
         billboard.Name = "ESP_Billboard"
         billboard.Parent = player.Character
         billboard.Adornee = player.Character:FindFirstChild("Head")
-        billboard.Size = UDim2.new(0, 200, 0, 100)
+        billboard.Size = UDim2.new(0, 100, 0, 25)
         billboard.StudsOffset = Vector3.new(0, 2, 0)
         billboard.AlwaysOnTop = true
         billboard.Enabled = ESPEnabled
@@ -128,7 +104,7 @@ function CreateESP(player)
         local healthFrame = Instance.new("Frame")
         healthFrame.Name = "HealthBar"
         healthFrame.Parent = billboard
-        healthFrame.Size = UDim2.new(1, 0, 0, 8)
+        healthFrame.Size = UDim2.new(0, 100, 0, 8)
         healthFrame.Position = UDim2.new(0, 0, 0, 0)
         healthFrame.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
         healthFrame.BackgroundTransparency = 0.2
@@ -148,48 +124,32 @@ function CreateESP(player)
         local healthText = Instance.new("TextLabel")
         healthText.Name = "HealthText"
         healthText.Parent = billboard
-        healthText.Size = UDim2.new(1, 0, 0, 15)
+        healthText.Size = UDim2.new(0, 100, 0, 15)
         healthText.Position = UDim2.new(0, 0, 0, 10)
         healthText.BackgroundTransparency = 1
-        healthText.TextColor3 = Color3.fromRGB(255, 255, 255) -- Fixed white color for health text
+        healthText.TextColor3 = Color3.fromRGB(255, 255, 255)
         healthText.TextSize = 12
         healthText.Font = Enum.Font.SourceSansBold
-        healthText.TextStrokeTransparency = 0
-        healthText.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
         healthText.Text = "HP: N/A"
         healthText.Visible = ShowHealth and ESPEnabled
-
-        local inventoryText = Instance.new("TextLabel")
-        inventoryText.Name = "InventoryText"
-        inventoryText.Parent = billboard
-        inventoryText.Size = UDim2.new(1, 0, 0, 15)
-        inventoryText.Position = UDim2.new(0, 0, 0, 25)
-        inventoryText.BackgroundTransparency = 1
-        inventoryText.TextColor3 = player.Team and player.Team.TeamColor and player.Team.TeamColor.Color or Color3.fromRGB(255, 255, 255)
-        inventoryText.TextSize = 12
-        inventoryText.Font = Enum.Font.SourceSansBold
-        inventoryText.TextStrokeTransparency = 0
-        inventoryText.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
-        inventoryText.Text = "Inventory: N/A"
-        inventoryText.Visible = ShowInventory and ESPEnabled and player.Team and table.find(prisonerTeams, player.Team.Name)
 
         local humanoid = player.Character:FindFirstChild("Humanoid")
         if humanoid then
             local function updateHealth()
                 if not player.Character or not player.Character:FindFirstChild("Humanoid") or not healthFrame.Visible then
                     healthText.Text = "HP: N/A"
-                    healthFrame.Size = UDim2.new(1, 0, 0, 8)
+                    healthFrame.Size = UDim2.new(0, 100, 0, 8)
                     return
                 end
                 local currentHumanoid = player.Character:FindFirstChild("Humanoid")
                 if currentHumanoid then
                     local healthPercent = currentHumanoid.Health / currentHumanoid.MaxHealth
-                    healthFrame.Size = UDim2.new(healthPercent, 0, 0, 8)
+                    healthFrame.Size = UDim2.new(0, 100 * healthPercent, 0, 8)
                     healthFrame.BackgroundColor3 = Color3.fromRGB(255 * (1 - healthPercent), 150 * healthPercent, 0)
                     healthText.Text = "HP: " .. math.floor(currentHumanoid.Health) .. "/" .. math.floor(currentHumanoid.MaxHealth)
                 else
                     healthText.Text = "HP: N/A"
-                    healthFrame.Size = UDim2.new(1, 0, 0, 8)
+                    healthFrame.Size = UDim2.new(0, 100, 0, 8)
                 end
             end
             updateHealth()
@@ -197,30 +157,7 @@ function CreateESP(player)
             humanoid:GetPropertyChangedSignal("MaxHealth"):Connect(updateHealth)
         end
 
-        if player.Team and table.find(prisonerTeams, player.Team.Name) then
-            updateInventory(player, { InventoryText = inventoryText })
-            player.Backpack.ChildAdded:Connect(function()
-                updateInventory(player, { InventoryText = inventoryText })
-            end)
-            player.Backpack.ChildRemoved:Connect(function()
-                updateInventory(player, { InventoryText = inventoryText })
-            end)
-            player.Character.ChildAdded:Connect(function(child)
-                if child:IsA("Tool") then
-                    updateInventory(player, { InventoryText = inventoryText })
-                end
-            end)
-            player.Character.ChildRemoved:Connect(function(child)
-                if child:IsA("Tool") then
-                    updateInventory(player, { InventoryText = inventoryText })
-                end
-            end)
-        end
-
         espHolder.Billboard = billboard
-        espHolder.HealthFrame = healthFrame
-        espHolder.HealthText = healthText
-        espHolder.InventoryText = inventoryText
         ESPObjects[player] = espHolder
     end
 end
@@ -235,42 +172,6 @@ function RemoveESP(player)
         end
         ESPObjects[player] = nil
     end
-end
-
-local function RefreshESP()
-    if not ESPEnabled then
-        Rayfield:Notify({
-            Title = "Info",
-            Content = "ESP must be enabled to refresh!",
-            Duration = 3,
-            Image = 4483362458
-        })
-        return
-    end
-    -- Clear all existing ESP objects
-    for _, espHolder in pairs(ESPObjects) do
-        if espHolder.Highlight then
-            espHolder.Highlight:Destroy()
-        end
-        if espHolder.Billboard then
-            espHolder.Billboard:Destroy()
-        end
-    end
-    ESPObjects = {}
-    -- Reapply ESP to all players
-    for _, player in pairs(Players:GetPlayers()) do
-        if player ~= Players.LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") and player.Character:FindFirstChild("Humanoid") then
-            task.spawn(function()
-                CreateESP(player)
-            end)
-        end
-    end
-    Rayfield:Notify({
-        Title = "Success",
-        Content = "ESP refreshed for all players!",
-        Duration = 3,
-        Image = 4483362458
-    })
 end
 
 for _, player in pairs(Players:GetPlayers()) do
@@ -365,34 +266,6 @@ local healthToggle = ESPTab:CreateToggle({
                 end
             end
         end
-    end
-})
-
-local inventoryToggle = ESPTab:CreateToggle({
-    Name = "Show Inventory",
-    CurrentValue = false,
-    Flag = "SHOW_INVENTORY",
-    Callback = function(Value)
-        ShowInventory = Value
-        for _, player in pairs(Players:GetPlayers()) do
-            if ESPObjects[player] and ESPObjects[player].Billboard then
-                if player.Team and table.find(prisonerTeams, player.Team.Name) then
-                    ESPObjects[player].Billboard.InventoryText.Visible = ShowInventory and ESPEnabled
-                    if ESPObjects[player].Billboard.InventoryText.Visible then
-                        updateInventory(player, ESPObjects[player])
-                    end
-                else
-                    ESPObjects[player].Billboard.InventoryText.Visible = false
-                end
-            end
-        end
-    end
-})
-
-local refreshButton = ESPTab:CreateButton({
-    Name = "Refresh ESP",
-    Callback = function()
-        RefreshESP()
     end
 })
 
@@ -637,15 +510,15 @@ local fovSlider = FOVTab:CreateSlider({
 local TeleportTab = Window:CreateTab("Teleports", 4483362458)
 
 local locations = {
-    ["MAINTENANCE"] = CFrame.new(172.34, 23.10, -143.87),
-    ["SECURITY"] = CFrame.new(224.47, 23.10, -167.90),
-    ["OC LOCKERS"] = CFrame.new(137.60, 23.10, -169.93),
-    ["RIOT LOCKERS"] = CFrame.new(165.63, 23.10, -192.25),
-    ["VENT"] = CFrame.new(76.96, -7.02, -19.21),
-    ["Maximum"] = CFrame.new(101.84, -8.82, -141.41),
-    ["Generator"] = CFrame.new(100.95, -8.82, -57.59),
-    ["OUTSIDE"] = CFrame.new(350.22, 5.40, -171.09),
-    ["Escapee Base"] = CFrame.new(749.02, -0.97, -470.45)
+    ["ورشه"] = CFrame.new(172.34, 23.10, -143.87),
+    ["المراقبه"] = CFrame.new(224.47, 23.10, -167.90),
+    ["القارد co"] = CFrame.new(137.60, 23.10, -169.93),
+    ["الروت لوكرز الفباي"] = CFrame.new(165.63, 23.10, -192.25),
+    ["الدخله"] = CFrame.new(76.96, -7.02, -19.21),
+    ["الماكس"] = CFrame.new(101.84, -8.82, -141.41),
+    ["الماطور"] = CFrame.new(100.95, -8.82, -57.59),
+    ["برا"] = CFrame.new(350.22, 5.40, -171.09),
+    ["المنجم"] = CFrame.new(749.02, -0.97, -470.45)
 }
 
 for name, cf in pairs(locations) do
@@ -664,18 +537,11 @@ TeleportTab:CreateButton({
     end
 })
 
-TeleportTab:CreateButton({
-    Name = "Keycard (💳)",
-    Callback = function()
-        game.Players.LocalPlayer.Character:PivotTo(CFrame.new(-13.36, 22.13, -27.47))
-    end
-})
-
 -- // ITEMS SECTION
 local ItemsTab = Window:CreateTab("Items", 4483362458)
 
 ItemsTab:CreateButton({
-    Name = "Get FAKE Keycard (Players can see it)",
+    Name = "Auto Get & Equip Keycard",
     Callback = function()
         local player = game.Players.LocalPlayer
         if not player.Character or not player.Character:FindFirstChild("HumanoidRootPart") then
@@ -744,7 +610,7 @@ ItemsTab:CreateButton({
                 else
                     Rayfield:Notify({
                         Title = "Warning",
-                        Content = "Keycard added to Backpack, but equipping failed. Check your character.",
+                        Content = "Keycard is non-functional. Try teleporting to interact.",
                         Duration = 5,
                         Image = 4483362458
                     })
@@ -756,7 +622,7 @@ ItemsTab:CreateButton({
             else
                 Rayfield:Notify({
                     Title = "Error",
-                    Content = "Try again.",
+                    Content = "Try again later or teleport to a keycard location.",
                     Duration = 5,
                     Image = 4483362458
                 })
@@ -775,8 +641,9 @@ local RunService = game:GetService("RunService")
 local LocalPlayer = game.Players.LocalPlayer
 local infiniteStaminaEnabled = false
 
+-- Button to toggle Infinite Stamina
 StaminaTab:CreateButton({
-    Name = "Infinite Stamina",
+    Name = "Toggle Infinite Stamina",
     Callback = function()
         infiniteStaminaEnabled = not infiniteStaminaEnabled
         local player = game.Players.LocalPlayer
@@ -819,10 +686,10 @@ StaminaTab:CreateButton({
                 infiniteStaminaEnabled = false
             end
         else
-            print("ServerVariables or Sprint not found.")
+            print("No ServerVariables or Sprint found to toggle infinite stamina.")
             Rayfield:Notify({
                 Title = "Error",
-                Content = "Try again.",
+                Content = "No ServerVariables or Sprint detected. Check your character setup.",
                 Duration = 5,
                 Image = 4483362458
             })
